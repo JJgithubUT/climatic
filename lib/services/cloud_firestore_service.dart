@@ -5,7 +5,7 @@ import 'package:climatic/models/device_model.dart';
 // Dynamic device Model
 import 'package:climatic/models/dynamic_device_model.dart';
 import 'package:climatic/models/history_model.dart';
-import 'package:climatic/screens/signin_screen.dart';
+/* import 'package:climatic/screens/signin_screen.dart'; */
 import 'package:climatic/screens/welcome_screen.dart';
 // Librerías para encriptar
 import 'package:climatic/services/cifrado_service.dart';

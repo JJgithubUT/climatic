@@ -266,7 +266,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                       const SizedBox(height: 25.0),
-                      Row(
+                      /* Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
@@ -303,7 +303,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           Icon(Icons.facebook),
                         ],
                       ),
-                      const SizedBox(height: 25.0),
+                      const SizedBox(height: 25.0), */
                       // don't have an account
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
