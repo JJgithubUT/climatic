@@ -2,6 +2,7 @@ import 'package:climatic/screens/profile_screen.dart';
 import 'package:climatic/screens/statistics_screen.dart';
 import 'package:climatic/screens/thermostatus_screen.dart';
 import 'package:climatic/services/conectivity_service.dart';
+import 'package:climatic/widgets/custom_transitions.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
@@ -155,19 +156,16 @@ class _ThermoCustomScaffoldState extends State<ThermoCustomScaffold>
                 _selectedIndex = index;
               });
               if (index == 0) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ThermostatusScreen()),
+                Navigator.of(context).pushReplacement(
+                  slideFromLeftRoute(const ThermostatusScreen()),
                 );
               } else if (index == 1) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StatisticsScreen()),
+                Navigator.of(context).pushReplacement(
+                  slideFromRightRoute(const StatisticsScreen()),
                 );
               } else if (index == 2) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
+                Navigator.of(context).pushReplacement(
+                  slideFromRightRoute(const ProfileScreen()),
                 );
               }
             },

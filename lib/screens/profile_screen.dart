@@ -104,7 +104,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               child: SingleChildScrollView(
-
                 // get started form
                 child: Form(
                   key: _formSignupKey,
@@ -255,6 +254,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: const Text('Actualizar mi usuario'),
                         ),
                       ),
+                      const SizedBox(height: 25.0),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red, // Fondo rojo
+                            foregroundColor: Colors.white, // Ícono blanco
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                            ), // Altura del botón
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                12,
+                              ), // Bordes redondeados
+                            ),
+                          ),
+                          onPressed: () {
+                            if (_formSignupKey.currentState!.validate()) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Saliendo del sistema'),
+                                ),
+                              );
+
+                              CloudFirestoreService().logOut(context);
+                            }
+                          },
+                          child: const Icon(Icons.logout),
+                        ),
+                      ),
+                      const SizedBox(height: 45.0),
                     ],
                   ),
                 ),
@@ -264,139 +294,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
-
-    /* return ProfileCustomScaffold(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: ListView(
-          padding: const EdgeInsets.only(top: 80, bottom: 30),
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Color(0xFF59A5D8).withOpacity(0.9),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 5,
-                    offset: Offset(2, 2),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  Text(
-                    _nombreUsuarioTitulo.isNotEmpty
-                        ? "¡Hola, $_nombreUsuarioTitulo!"
-                        : "Bienvenido a Climatic",
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF91E5F6),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Nombre',
-                      labelStyle: TextStyle(color: Color(0xFF84D2F6)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _emailController,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(color: Color(0xFF84D2F6)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      labelText: 'Contraseña',
-                      labelStyle: TextStyle(color: Color(0xFF84D2F6)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Color(0xFF386FA4),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF386FA4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    ),
-                    onPressed: _updateUser,
-                    child:
-                        const Text("Guardar", style: TextStyle(color: Colors.white)),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF133C55),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    ),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ThermostatusScreen(),
-                        ),
-                      );
-                    },
-                    child:
-                        const Text("Cancelar", style: TextStyle(color: Colors.white)),
-                  ),
-                  if (_errorMessage != null) const SizedBox(height: 10),
-                  if (_errorMessage != null)
-                    Text(
-                      _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontSize: 14),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ); */
   }
 }
