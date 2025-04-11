@@ -14,7 +14,7 @@ class TemperatureGraph extends StatelessWidget {
       return const Center(
         child: Text(
           'No hay datos disponibles.',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
       );
     }

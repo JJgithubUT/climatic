@@ -5,6 +5,7 @@ import 'package:climatic/models/device_model.dart';
 // Dynamic device Model
 import 'package:climatic/models/dynamic_device_model.dart';
 import 'package:climatic/models/history_model.dart';
+import 'package:climatic/models/subdevice_model.dart';
 import 'package:climatic/screens/signin_screen.dart';
 // Librerías para encriptar
 import 'package:climatic/services/cifrado_service.dart';
@@ -265,8 +266,95 @@ class CloudFirestoreService {
 
   // No se elimina ninguna dispositivo, solo se pueden seguir asignando
 
-  // El insertar dispositivo en tiempo real ocurre desde el dispositivo IOT,no se eliminan.
-  //Se conecta el dispositivo del usuario a los ya existentes de la firestore realtime database
+  ///// Subdispositivos /////
+
+  /* 
+  Los subdispositivos son solo opciones a seleccionar para que después, en dispositivos,
+  se realize toda la gestión del dispositivo iot. En el dispositivo es la selección del subdispositivo.
+  Entre esta lista de subdispositivos disponibles, se selecciona un subdispositivo que actualizará el dispositivo.
+  Importante recalcar que el código que se pase al dispositivo desde el subdispositivo.
+   */
+
+  Future<void> insertSubdvice(SubdeviceModel subdevice) async {
+    await _cloudFireStore.collection('subdispositivos').add(subdevice.toMap());
+  }
+
+  Stream<List<SubdeviceModel>> getSubdevices(BuildContext context) async* {
+  final UserModel? remoteUser = await getRemoteUser();
+  try {
+    if (remoteUser == null) {
+      // If no remote user, return an empty stream
+      yield [];
+      return;
+    }
+
+    final String correo = remoteUser.email;
+
+    final snapshot = FirebaseFirestore.instance
+        .collection('subdispositivos')
+        .where('correo_usu', isEqualTo: correo)
+        .snapshots();
+
+    await for (final docSnapshot in snapshot) {
+      yield docSnapshot.docs
+          .map((doc) => SubdeviceModel.fromDocumentSnapshot(doc))
+          .toList();
+    }
+  } catch (e) {
+    showSnapMessage(
+      // ignore: use_build_context_synchronously
+      context: context,
+      message: 'No tienes dispositivos: ${e.toString()}',
+      duration: const Duration(seconds: 3),
+    );
+    yield [];
+  }
+}
+
+  Future<void> updateSubdevice({
+    required SubdeviceModel subdevice,
+    required BuildContext context,
+  }) async {
+    try {
+      await _cloudFireStore.collection('subdispositivos').doc(subdevice.id).update({
+        'codigo_sub': subdevice.codigo,
+        'nombre_sub': subdevice.nombre
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print('CloudService || updateSubdevice(): Error: ${e.toString()}');
+      showSnapMessage(
+        // ignore: use_build_context_synchronously
+        context: context,
+        message: 'Error al actualizar subdispositivo: ${e.toString()}',
+        duration: Duration(seconds: 5),
+      );
+    }
+  }
+
+  Future<void> deleteSubdevice({required String docId, required BuildContext context}) async {
+    try {
+      await _cloudFireStore.collection('subdispositivos').doc(docId).delete();
+    } catch (e) {
+      showSnapMessage(
+        // ignore: use_build_context_synchronously
+        context: context,
+        message: 'Error all eliminar el subdispositivo error: ${e.toString()}',
+        duration: Duration(seconds: 5)
+      );
+    }
+  }
+
+  ///// Dispositivos dinámicos (Real Time DB) /////
+
+  /*
+  El insertar dispositivo en tiempo real ocurre desde el dispositivo IOT,no se eliminan.
+  Se conecta el dispositivo del usuario a los ya existentes de la firestore realtime database
+  En realidad tan solo desde la parte de la app móvil se gestiona su acceso a estos dispositivos
+  Solo existen funciones para obtenerlo /o actualizarlo (Read, Update), no se eliminan a menos
+  Que así sea requerido en la administración desde un servicio extenrno no construido
+  actualmente, podría ser un sitio web especial para administradores de la empresa detras de Climatic.
+  */
 
   Stream<DynamicDeviceModel?> getDynamicDevice(String deviceCode) {
     return _dbRef.child(deviceCode).onValue.map((event) {
@@ -551,7 +639,7 @@ class CloudFirestoreService {
     }
   }
 
-  ///// ListDevices /////
+  ///// Historial ( Registros estadísticos ) /////
 
   /// Consulta los registros de la colección "historial" que se encuentren entre [start] y [end]
   /// y correspondan al código del dispositivo [codigo].
@@ -580,5 +668,5 @@ class CloudFirestoreService {
     // Mapear cada documento al modelo HistoryModel
     return snapshot.docs.map((doc) => HistoryModel.fromDocument(doc)).toList();
   }
-  
+
 }

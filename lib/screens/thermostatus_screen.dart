@@ -1,7 +1,9 @@
 import 'package:climatic/models/device_model.dart';
 import 'package:climatic/models/dynamic_device_model.dart';
+import 'package:climatic/screens/subdevices_screen.dart';
 import 'package:climatic/services/cloud_firestore_service.dart';
 import 'package:climatic/services/validation_service.dart';
+import 'package:climatic/widgets/custom_transitions.dart';
 import 'package:climatic/widgets/thermo_custom_scaffold.dart';
 import 'package:flutter/material.dart';
 
@@ -244,7 +246,18 @@ class _ThermostatusScreenState extends State<ThermostatusScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ThermoCustomScaffold(
+  return ThermoCustomScaffold(
+    child: GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.velocity.pixelsPerSecond.dx < 0) {
+          // Acción al deslizar de derecha a izquierda
+          // ignore: avoid_print
+          Navigator.of(context).pushReplacement(
+            slideFromRightRoute(const SubdevicesScreen()),
+          );
+          print("Deslizaste de derecha a izquierda");
+        }
+      },
       child: Column(
         children: [
           const Expanded(flex: 1, child: SizedBox(height: 10)),
@@ -265,7 +278,7 @@ class _ThermostatusScreenState extends State<ThermostatusScreen> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      device?.nombre ?? 'Cargando...',
+                      device?.nombre ?? '...',
                       style: const TextStyle(
                         color: Color(0xFF133C55),
                         fontSize: 24,
@@ -279,8 +292,6 @@ class _ThermostatusScreenState extends State<ThermostatusScreen> {
                       size: 80,
                     ),
                     const SizedBox(height: 20),
-
-                    // 🔥 Filas de temperaturas (T. Actual y T. Objetivo)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -326,9 +337,7 @@ class _ThermostatusScreenState extends State<ThermostatusScreen> {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 30),
-
                     Slider(
                       value: temperature,
                       min: 10,
@@ -344,9 +353,7 @@ class _ThermostatusScreenState extends State<ThermostatusScreen> {
                         _updateTemperature();
                       },
                     ),
-
                     const SizedBox(height: 40),
-
                     ElevatedButton.icon(
                       onPressed: showDialogEdit,
                       icon: const Icon(Icons.edit, color: Colors.white),
@@ -367,6 +374,7 @@ class _ThermostatusScreenState extends State<ThermostatusScreen> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
