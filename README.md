@@ -2,6 +2,10 @@
 
 Climatic es una aplicación desarrollada en Flutter que proporciona información meteorológica en tiempo real. Este proyecto tiene como objetivo ayudarte a estar preparado para cualquier condición climática.
 
+## Ingresa a nuestro twitch
+
+[TWITCH de CLIMATIC](https://www.twitch.tv/climaticorg)
+
 ## Características
 - Información del clima actual.
 - Pronósticos extendidos.
